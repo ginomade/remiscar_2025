@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="#d5d9ea"
+    tools:context=".CronoActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#4665A3"
+        android:id="@+id/Cartel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="CRONOMETRO"
+            android:id="@+id/textView"
+            android:layout_gravity="center"
+            android:textColor="#d5d9ea"
+            android:textSize="30dp" />
+    </FrameLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Iniciar"
+        style="@style/Theme.Remiscar.Button"
+        android:id="@+id/buttonContar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Cartel"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Detener"
+        style="@style/Theme.Remiscar.Button"
+        android:id="@+id/buttonPausa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonContar" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="148dp"
+        android:layout_marginTop="12dp"
+        android:id="@+id/chronometer"
+        android:layout_gravity="center_horizontal"
+        android:singleLine="false"
+        android:textSize="90sp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonPausa"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Volver"
+        style="@style/Theme.Remiscar.Button"
+        android:id="@+id/buttonInicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chronometer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

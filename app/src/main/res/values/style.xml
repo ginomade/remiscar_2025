@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Remiscar.Button">
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Theme.Remiscar.PanicButton">
+        <item name="android:background">@drawable/button_selector_panic</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

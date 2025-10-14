@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4665A3"
+    tools:context=".SplashActivity">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="399dp"
+        android:layout_height="196dp"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_marginTop="226dp"
+        android:src="@drawable/icon_agencia" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="#ff0000"
+        android:paddingLeft="10dp"
+        android:text="PROHIBIDO USAR AL CONDUCIR"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textVersion"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp"
+        android:text="By Pablo Daniel Giunta"
+        android:textColor="#d5d9ea"
+        android:textSize="24dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textVersion"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="512dp"
+        android:paddingLeft="10dp"
+        android:text="ATENCION!!!"
+        android:textColor="#d5d9ea"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="397dp"
+        android:layout_height="205dp"
+        android:layout_above="@+id/textVersion"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="292dp"
+        android:background="#4665A3"
+        android:paddingLeft="10dp"
+        android:text="No guarde el celular en el bolsillo con la aplicación abierta."
+        android:textAlignment="viewStart"
+        android:textColor="#d5d9ea"
+        android:textSize="36dp" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="VERSION 6.1"
+        android:id="@+id/textVersion"
+        android:textColor="#d5d9ea"
+        android:background="#4665A3"
+        android:paddingLeft="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

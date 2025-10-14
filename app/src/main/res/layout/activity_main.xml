@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#d5d9ea"
+    tools:context=".MainActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#4665A3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="15dp"
+            android:text="PROHIBIDO USAR AL CONDUCIR"
+            android:textColor="#ffffff"
+            android:textSize="21dp"
+            android:layout_centerVertical="true"/>
+
+        <ImageButton
+            android:id="@+id/menu_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/baseline_menu_24" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/top_buttons"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+        <TextView
+            android:id="@+id/text_movil"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="movil"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:gravity="center"/>
+        <TextView
+            style="@style/Theme.Remiscar.Button"
+            android:id="@+id/button_crono"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="CRONO" />
+
+        <TextView
+            android:id="@+id/button_mapa"
+            style="@style/Theme.Remiscar.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="MAPA" />
+
+        <ImageButton
+            android:id="@+id/button_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:src="@drawable/baseline_refresh_24"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/top_buttons_2"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_buttons">
+
+
+        <TextView
+            android:id="@+id/button_alerta"
+            style="@style/Theme.Remiscar.PanicButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="PANICO" />
+
+        <TextView
+            android:id="@+id/button_mensajes"
+            style="@style/Theme.Remiscar.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="NOVEDADES" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/main_webview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="161dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_buttons_2"
+        app:layout_constraintBottom_toTopOf="@id/map_container"/>
+
+    <FrameLayout
+        android:id="@+id/map_container"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="#22ff1b00"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_webview">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frmAlerta"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ffff1b00"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="ALERTA ACTIVA"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

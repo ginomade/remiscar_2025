@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "855102328671",
+    "project_id": "remis1",
+    "storage_bucket": "remis1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855102328671:android:cc974529f6900a55b5f0ea",
+        "android_client_info": {
+          "package_name": "com.nomade.movilremiscar.remiscarmovil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuKGQglsz2OfXHZfC466aUal-LwyxjzIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

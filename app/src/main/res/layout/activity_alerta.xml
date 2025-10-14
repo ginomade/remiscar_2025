@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="10dp"
+    tools:context="com.nomade.movilremiscar.remiscarmovil.AlertaActivity">
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="42dp"
+        android:text="Inicio"
+        style="@style/Theme.Remiscar.Button"
+        android:id="@+id/buttonInicio"
+        android:layout_alignParentBottom="true"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ffff1b00">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ALERTA"
+                android:id="@+id/textView11"
+                android:layout_gravity="center"
+                android:textColor="#ffffffff"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Movil"
+            android:id="@+id/textView1"
+            android:textColor="#ff0212ff"
+            android:textSize="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="----------"
+            android:id="@+id/textMovil" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Ubicacion"
+            android:id="@+id/textView2"
+            android:textColor="#ff0212ff"
+            android:textSize="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="-------"
+            android:id="@+id/textUbicacion" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Fecha"
+            android:id="@+id/textView3"
+            android:textColor="#ff0212ff"
+            android:textSize="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="---------"
+            android:id="@+id/textFecha" />
+    </LinearLayout>
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/osmmap"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:layout_marginBottom="55dp"/>
+
+</RelativeLayout>
