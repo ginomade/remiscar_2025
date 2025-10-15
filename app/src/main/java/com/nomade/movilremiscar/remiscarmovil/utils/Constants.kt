@@ -29,6 +29,7 @@ object Constants {
 
     const val USER_EMAIL_KEY = "USER_EMAIL_KEY"
     const val USER_MOVIL_KEY = "USER_MOVIL_KEY"
+    const val USER_LOCATION_KEY = "USER_LOCATION_KEY"
     const val PRIVACY_KEY = "PRIVACY_KEY"
     const val LOCATION_DIALOG_KEY = "LOCATION_DIALOG_KEY"
     const val USER_DIALOG_KEY = "USER_DIALOG_KEY"

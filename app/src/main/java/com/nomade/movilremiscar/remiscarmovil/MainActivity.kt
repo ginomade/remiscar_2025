@@ -62,6 +62,7 @@ import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AL_UBICACION_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.MAIN_VIEW_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.SEGUIMIENTO
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_EMAIL_KEY
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_LOCATION_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_MOVIL_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.VERSION_NAME_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.SharedPrefsUtil
@@ -212,6 +213,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         }
 
+        geopos = ""
+        SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
         val syncRequest = OneTimeWorkRequestBuilder<LocationWorker>()
@@ -393,7 +396,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                                 "update localizacion $lat,$lon"
                                 //aca
                             )
-                            //geopos = "$lat,$lon"
+                            geopos = "$lat,$lon"
+                            SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
                             Log.w("TEST LOC", geopos)
                             map?.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(
@@ -469,6 +473,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun checkAndInitialize() {
         enableStart = true
+        geopos = SharedPrefsUtil.get(USER_LOCATION_KEY, "")
         // check permisos
 
         // check condiciones
@@ -900,7 +905,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mediaPlayer?.release()
         mediaPlayer = null
         active = false
-        geopos = ""
+        //geopos = ""
         stopLocationUpdates()
     }
 

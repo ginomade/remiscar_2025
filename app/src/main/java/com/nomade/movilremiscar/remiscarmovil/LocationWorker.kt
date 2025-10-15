@@ -12,6 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.nomade.movilremiscar.remiscarmovil.net.RetrofitService
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_EMAIL_KEY
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_LOCATION_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_MOVIL_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.SharedPrefsUtil
 import kotlinx.coroutines.CoroutineScope
@@ -64,7 +65,7 @@ class LocationWorker (appContext: Context, workerParams: WorkerParameters) :
         val email = SharedPrefsUtil.get(USER_EMAIL_KEY, "")
         val movil = SharedPrefsUtil.get(USER_MOVIL_KEY, "")
         val geopos = "${location.latitude},${location.longitude}"
-
+        SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         enviarGeopos(email, movil, geopos)
     }
 
