@@ -111,7 +111,7 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
     private fun scheduleNextWork() {
         // Construimos el OneTimeWorkRequest para que se ejecute después de 60 segundos
         val nextWorkRequest = OneTimeWorkRequestBuilder<LocationWorker>()
-            .setInitialDelay(60, TimeUnit.SECONDS) // Configura el delay de 60 segundos
+            .setInitialDelay(30, TimeUnit.SECONDS) // Configura el delay de 60 segundos
             .build()
 
         // Encolamos el siguiente trabajo
