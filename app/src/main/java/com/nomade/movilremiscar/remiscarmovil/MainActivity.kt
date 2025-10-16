@@ -491,7 +491,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (enableStart) {
                 observeViewModel()
                 setWebview()
-                requestList()
+                //requestList()
                 iniciarTimer()
             }
 
@@ -893,6 +893,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onResume() {
         super.onResume()
+        setWebview()
         checkAndInitialize()
         flg_webview_started = false
         validarGps()
