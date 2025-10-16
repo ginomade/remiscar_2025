@@ -7,6 +7,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -218,7 +219,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
-        startLocationService()
+        if(hasLocation(this)) {
+            startLocationService()
+        }
 
         val syncRequest = OneTimeWorkRequestBuilder<LocationWorker>()
             .build()
@@ -229,13 +232,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     fun startLocationService() {
         val serviceIntent = Intent(this, LocationService::class.java)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Para Android 8.0 (Oreo) y superior
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
-        }
+        startForegroundService(serviceIntent)
     }
+
+    private fun hasLocation(ctx: Context) =
+        ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
 
     fun getInitialLocation() {
         // [START_EXCLUDE silent]
@@ -432,6 +434,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         map?.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
+                startLocationService()
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
@@ -952,11 +955,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
             == PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
         ) {
             locationPermissionGranted = true
         } else {
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
             )
         }
@@ -979,6 +988,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 ) {
                     locationPermissionGranted = true
                 }
