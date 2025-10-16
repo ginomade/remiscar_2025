@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -24,7 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.TimeUnit
 
-class LocationWorker (appContext: Context, workerParams: WorkerParameters) :
+class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
     private var TAG = "LocationWorker"
 
@@ -46,7 +45,10 @@ class LocationWorker (appContext: Context, workerParams: WorkerParameters) :
                 scheduleNextWork()
                 Result.success()
             } else {
-                Log.w(TAG, "La ubicación es nula. Puede que el GPS esté apagado o no haya ubicación reciente.")
+                Log.w(
+                    TAG,
+                    "La ubicación es nula. Puede que el GPS esté apagado o no haya ubicación reciente."
+                )
                 Result.retry()
             }
         } catch (e: SecurityException) {

@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -217,10 +218,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
+        startLocationService()
+
         val syncRequest = OneTimeWorkRequestBuilder<LocationWorker>()
             .build()
 
         WorkManager.getInstance(this).enqueue(syncRequest)
+    }
+
+    fun startLocationService() {
+        val serviceIntent = Intent(this, LocationService::class.java)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Para Android 8.0 (Oreo) y superior
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 
     fun getInitialLocation() {
