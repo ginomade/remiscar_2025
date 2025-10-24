@@ -7,12 +7,15 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 
 class LocationService : Service() {
 
@@ -24,6 +27,9 @@ class LocationService : Service() {
         private const val NOTIFICATION_CHANNEL_ID = "location_channel_id"
         private const val NOTIFICATION_ID = 12345
         private const val TAG = "LocationService"
+
+        var isServiceRunning = false
+            private set
     }
 
     override fun onCreate() {
@@ -31,6 +37,7 @@ class LocationService : Service() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         createLocationRequest()
         createLocationCallback()
+        isServiceRunning = true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -53,6 +60,7 @@ class LocationService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        isServiceRunning = false
         // Detiene las actualizaciones de ubicación cuando el servicio se detiene
         fusedLocationClient.removeLocationUpdates(locationCallback)
         Log.d(TAG, "Servicio de ubicación detenido y actualizaciones eliminadas.")
@@ -64,7 +72,7 @@ class LocationService : Service() {
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
-            interval = 30000 // Intervalo deseado (ej: 60 segundos)
+            interval = 40000 // Intervalo deseado (ej: 60 segundos)
             fastestInterval = 30000 // El más rápido (ej: 30 segundos)
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
@@ -75,7 +83,10 @@ class LocationService : Service() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.locations.forEach { location ->
                     // **AQUÍ ESTÁ LA UBICACIÓN VÁLIDA Y RECIENTE**
-                    Log.i(TAG, "Ubicación activa recibida: Lat=${location.latitude}, Lon=${location.longitude}")
+                    Log.i(
+                        TAG,
+                        "Ubicación activa recibida: Lat=${location.latitude}, Lon=${location.longitude}"
+                    )
 
                 }
             }
@@ -90,7 +101,9 @@ class LocationService : Service() {
                 "Actualizaciones de Ubicación",
                 NotificationManager.IMPORTANCE_LOW
             )
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                channel
+            )
         }
     }
 

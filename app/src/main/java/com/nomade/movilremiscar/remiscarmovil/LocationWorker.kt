@@ -9,7 +9,10 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.nomade.movilremiscar.remiscarmovil.net.RetrofitService
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.SESION_INICIADA
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_EMAIL_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_LOCATION_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_MOVIL_KEY
@@ -18,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,8 +45,9 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
 
                 Log.i(TAG, "Ubicación obtenida: Lat=$latitude, Lon=$longitude")
                 logLocation(location)
-
-                scheduleNextWork()
+                if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
+                    scheduleNextWork()
+                }
                 Result.success()
             } else {
                 Log.w(
@@ -91,7 +96,25 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
                     ) {
                         if (response.isSuccessful()) {
                             Log.w(TAG, "enviarGeopos: ${response.code()}")
+                            val jsonResponse = response.body().toString()
+                            if (jsonResponse.length > 5) {
+                                val gson = Gson()
+                                try {
+                                    val jsonObject = JSONObject(jsonResponse)
+                                    val sesionIniciada: Boolean =
+                                        jsonObject.getBoolean("sesionIniciada")
+                                    SharedPrefsUtil.set(
+                                        SESION_INICIADA,
+                                        sesionIniciada
+                                    )
+                                } catch (e: JsonSyntaxException) {
+                                    Log.w(
+                                        TAG,
+                                        "enviarGeopos: JsonSyntaxException"
+                                    )
+                                }
 
+                            }
                         }
                     }
 
@@ -109,9 +132,8 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
     }
 
     private fun scheduleNextWork() {
-        // Construimos el OneTimeWorkRequest para que se ejecute después de 60 segundos
         val nextWorkRequest = OneTimeWorkRequestBuilder<LocationWorker>()
-            .setInitialDelay(30, TimeUnit.SECONDS) // Configura el delay de 60 segundos
+            .setInitialDelay(40, TimeUnit.SECONDS) // Configura el delay
             .build()
 
         // Encolamos el siguiente trabajo

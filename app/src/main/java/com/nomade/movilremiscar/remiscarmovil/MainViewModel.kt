@@ -17,12 +17,14 @@ import com.nomade.movilremiscar.remiscarmovil.net.RetrofitService
 import com.nomade.movilremiscar.remiscarmovil.net.ViajeResultObject
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.COORDENADAS_VIAJE_KEY
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.SESION_INICIADA
 import com.nomade.movilremiscar.remiscarmovil.utils.SharedPrefsUtil
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -115,7 +117,7 @@ class MainViewModel : ViewModel() {
                         call: Call<String?>,
                         response: Response<String?>
                     ) {
-                        if (response.isSuccessful() ) {
+                        if (response.isSuccessful()) {
                             Log.w(TAG_VIEWMODEL, "Response: ${response.body()}")
                             var movilData = obtenerJsonResultObject(response)
                             userInfo.postValue(movilData?.movil!!)
@@ -621,7 +623,25 @@ class MainViewModel : ViewModel() {
                     ) {
                         if (response.isSuccessful()) {
                             Log.w(TAG_VIEWMODEL, "enviarGeopos: ${response.code()}")
+                            val jsonResponse = response.body().toString()
+                            if (jsonResponse.length > 5) {
+                                val gson = Gson()
+                                try {
+                                    val jsonObject = JSONObject(jsonResponse)
+                                    val sesionIniciada: Boolean =
+                                        jsonObject.getBoolean("sesionIniciada")
+                                    SharedPrefsUtil.set(
+                                        SESION_INICIADA,
+                                        sesionIniciada
+                                    )
+                                } catch (e: JsonSyntaxException) {
+                                    Log.w(
+                                        TAG_VIEWMODEL,
+                                        "enviarGeopos: JsonSyntaxException"
+                                    )
+                                }
 
+                            }
                         }
                     }
 

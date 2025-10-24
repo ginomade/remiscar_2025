@@ -12,7 +12,6 @@ import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -61,8 +60,10 @@ import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AL_GEOPOS_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AL_MOVIL_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AL_STATUS_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AL_UBICACION_KEY
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.INICIO_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.MAIN_VIEW_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.SEGUIMIENTO
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.SESION_INICIADA
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_EMAIL_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_LOCATION_KEY
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.USER_MOVIL_KEY
@@ -219,25 +220,35 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
-        if(hasLocation(this)) {
+        if (hasLocation(this)) {
             startLocationService()
         }
 
         val syncRequest = OneTimeWorkRequestBuilder<LocationWorker>()
+            .setInitialDelay(40, TimeUnit.SECONDS)
             .build()
 
         WorkManager.getInstance(this).enqueue(syncRequest)
     }
 
     fun startLocationService() {
+        if (LocationService.isServiceRunning) {
+            Log.d("ServiceStarter", "LocationService ya está en ejecución. No se hace nada.")
+            return
+        }
         val serviceIntent = Intent(this, LocationService::class.java)
-
         startForegroundService(serviceIntent)
     }
 
     private fun hasLocation(ctx: Context) =
-        ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(
+            ctx,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PERMISSION_GRANTED
 
     fun getInitialLocation() {
         // [START_EXCLUDE silent]
@@ -816,14 +827,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (movil.isNotEmpty() && userEmail.isNotEmpty()) {
             viewModel.buscarMensajes(userEmail, movil)
             Thread.sleep(150)
-            requestList()
+            if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
+                requestList()
+            }
             Thread.sleep(150)
             viewModel.buscarCoordenadasViaje(userEmail, movil)
         }
-
-        /*if (movil.isNullOrEmpty()) {
-            validarUsuario()
-        }*/
 
         if (active) {
             iniciarTimer()
@@ -854,6 +863,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.w("TEST LOC", getGeopos())
             viewModel.enviarGeoposMviajeshoy(userEmail, movil, getGeopos())
 
+            if (!SharedPrefsUtil.get(SESION_INICIADA, false)) {
+                stopService(this, LocationService::class.java)
+            }
         }
     }
 
@@ -876,10 +888,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun enableUser() {
     }
 
+    fun stopService(
+        context: Context,
+        serviceClass: Class<*>
+    ) {
+
+        // 🔹 Detener el Service si está en ejecución
+        val serviceIntent = Intent(context, serviceClass)
+        context.stopService(serviceIntent)
+    }
+
     fun setWebview() {
+        var webViewUrl = ""
+        if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
+            webViewUrl = MAIN_VIEW_ADD
+        } else {
+            webViewUrl = INICIO_ADD
+        }
 
         val finalUrl =
-            "${MAIN_VIEW_ADD}?imei=${userEmail}&Movil=${movil}&geopos=${getGeopos()}"
+            "${webViewUrl}?imei=${userEmail}&Movil=${movil}&geopos=${getGeopos()}"
         Log.d(TAG_MAIN, finalUrl)
         binding.mainWebview.settings.setJavaScriptEnabled(true)
 
@@ -964,8 +992,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             locationPermissionGranted = true
         } else {
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION),
+                this, arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
             )
         }

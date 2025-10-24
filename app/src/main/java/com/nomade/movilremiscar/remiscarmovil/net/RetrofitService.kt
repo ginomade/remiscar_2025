@@ -6,6 +6,7 @@ import com.nomade.movilremiscar.remiscarmovil.utils.Constants.AUTO_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.BASE_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.BUSCAR_ALERTA_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.COORDENADAS_VIAJE_ADD
+import com.nomade.movilremiscar.remiscarmovil.utils.Constants.INICIO_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.MAIN_GEOPOS_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.MAIN_VIEW_ADD
 import com.nomade.movilremiscar.remiscarmovil.utils.Constants.MENSAJES_ADD
@@ -78,6 +79,13 @@ interface RetrofitService {
     fun enviarGeopos(
         @Query("Movil") movil: String,
         @Query("IMEI") imei: String,
+        @Query("geopos") geopos: String
+    ): Call<String?>?
+
+    @POST(INICIO_ADD)
+    fun cargarInicio(
+        @Query("Movil") movil: String,
+        @Query("imei") imei: String,
         @Query("geopos") geopos: String
     ): Call<String?>?
 
