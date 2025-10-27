@@ -46,6 +46,7 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
                 Log.i(TAG, "Ubicación obtenida: Lat=$latitude, Lon=$longitude")
                 logLocation(location)
                 if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
+                    Log.d("SESION_INICIADA scheduleNextWork", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
                     scheduleNextWork()
                 }
                 Result.success()
@@ -103,6 +104,7 @@ class LocationWorker(appContext: Context, workerParams: WorkerParameters) :
                                     val jsonObject = JSONObject(jsonResponse)
                                     val sesionIniciada: Boolean =
                                         jsonObject.getBoolean("sesionIniciada")
+                                    Log.d("SESION_INICIADA worker enviarGeopos", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
                                     SharedPrefsUtil.set(
                                         SESION_INICIADA,
                                         sesionIniciada

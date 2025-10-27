@@ -630,6 +630,7 @@ class MainViewModel : ViewModel() {
                                     val jsonObject = JSONObject(jsonResponse)
                                     val sesionIniciada: Boolean =
                                         jsonObject.getBoolean("sesionIniciada")
+                                    Log.d("SESION_INICIADA viewmodel enviarGeopos", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
                                     SharedPrefsUtil.set(
                                         SESION_INICIADA,
                                         sesionIniciada

@@ -73,6 +73,7 @@ import com.nomade.movilremiscar.remiscarmovil.utils.UserDialogFragment
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
+import kotlin.toString
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var movil_en_alerta = false
     private var direccion = ""
     private var flg_webview_started = false
+    private var flg_inicio = false
 
 
     private var map: GoogleMap? = null
@@ -220,6 +222,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
+        Log.d("SESION_INICIADA mainactivity oncreate", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
+        if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
+            startServices()
+        }
+    }
+
+    private fun startServices() {
         if (hasLocation(this)) {
             startLocationService()
         }
@@ -827,6 +836,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (movil.isNotEmpty() && userEmail.isNotEmpty()) {
             viewModel.buscarMensajes(userEmail, movil)
             Thread.sleep(150)
+            Log.d("SESION_INICIADA mainactivity tareasPeriodicas", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
             if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
                 requestList()
             }
@@ -863,6 +873,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.w("TEST LOC", getGeopos())
             viewModel.enviarGeoposMviajeshoy(userEmail, movil, getGeopos())
 
+            Log.d("SESION_INICIADA mainactivity requestList", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
             if (!SharedPrefsUtil.get(SESION_INICIADA, false)) {
                 stopService(this, LocationService::class.java)
             }
@@ -898,8 +909,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         context.stopService(serviceIntent)
     }
 
+    // valido el momento en que la webview pasa de Mviajeshoyinicio a Mviajeshoy para actualizar SESION_INICIADA
+    fun checkInicioSesion(url: String) {
+        var inicio_url = !url.toString().lowercase().contains("inicio")
+
+        if(!flg_inicio && inicio_url) {
+            viewModel.enviarGeopos(userEmail, movil, getGeopos())
+            startServices()
+        }
+        flg_inicio = inicio_url
+    }
+
     fun setWebview() {
         var webViewUrl = ""
+        Log.d("SESION_INICIADA webview", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
         if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
             webViewUrl = MAIN_VIEW_ADD
         } else {
@@ -915,6 +938,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url!!)
                 flg_webview_started = !url.toString().lowercase().contains("mviajeshoy")
+                checkInicioSesion(url!!)
                 return true
             }
 
