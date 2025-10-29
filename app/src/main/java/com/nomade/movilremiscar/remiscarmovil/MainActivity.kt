@@ -73,7 +73,6 @@ import com.nomade.movilremiscar.remiscarmovil.utils.UserDialogFragment
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
-import kotlin.toString
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -222,7 +221,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefsUtil.set(USER_LOCATION_KEY, geopos)
         getInitialLocation()
 
-        Log.d("SESION_INICIADA mainactivity oncreate", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
+        Log.d(
+            "SESION_INICIADA mainactivity oncreate",
+            SharedPrefsUtil.get(SESION_INICIADA, false).toString()
+        )
         if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
             startServices()
         }
@@ -528,7 +530,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (enableStart) {
                 observeViewModel()
                 setWebview()
-                //requestList()
                 iniciarTimer()
             }
 
@@ -836,12 +837,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (movil.isNotEmpty() && userEmail.isNotEmpty()) {
             viewModel.buscarMensajes(userEmail, movil)
             Thread.sleep(150)
-            Log.d("SESION_INICIADA mainactivity tareasPeriodicas", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
+            Log.d(
+                "SESION_INICIADA mainactivity tareasPeriodicas",
+                SharedPrefsUtil.get(SESION_INICIADA, false).toString()
+            )
             if (SharedPrefsUtil.get(SESION_INICIADA, false)) {
                 requestList()
+                Thread.sleep(150)
+                viewModel.buscarCoordenadasViaje(userEmail, movil)
             }
-            Thread.sleep(150)
-            viewModel.buscarCoordenadasViaje(userEmail, movil)
         }
 
         if (active) {
@@ -873,7 +877,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.w("TEST LOC", getGeopos())
             viewModel.enviarGeoposMviajeshoy(userEmail, movil, getGeopos())
 
-            Log.d("SESION_INICIADA mainactivity requestList", SharedPrefsUtil.get(SESION_INICIADA, false).toString())
+            Log.d(
+                "SESION_INICIADA mainactivity requestList",
+                SharedPrefsUtil.get(SESION_INICIADA, false).toString()
+            )
             if (!SharedPrefsUtil.get(SESION_INICIADA, false)) {
                 stopService(this, LocationService::class.java)
             }
@@ -913,8 +920,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     fun checkInicioSesion(url: String) {
         var inicio_url = !url.toString().lowercase().contains("inicio")
 
-        if(!flg_inicio && inicio_url) {
+        if (!flg_inicio && inicio_url) {
             viewModel.enviarGeopos(userEmail, movil, getGeopos())
+            SharedPrefsUtil.set(
+                SESION_INICIADA,
+                true
+            )
             startServices()
         }
         flg_inicio = inicio_url
