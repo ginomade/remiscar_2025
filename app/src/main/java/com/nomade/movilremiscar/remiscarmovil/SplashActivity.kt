@@ -1,11 +1,16 @@
 package com.nomade.movilremiscar.remiscarmovil
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -44,7 +49,9 @@ class SplashActivity : AppCompatActivity() {
         getVersionName()
         binding.textVersion.text = "VERSION ${versionName}"
 
-        delayAndStart()
+        checkAndRequestPermissions(this)
+
+        //delayAndStart()
     }
 
     private fun delayAndStart() {
@@ -68,6 +75,65 @@ class SplashActivity : AppCompatActivity() {
             }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+        }
+    }
+
+    //permisos de camara y archivos
+
+    // Llama a esta función cuando los permisos están listos
+    private fun iniciarCamara() {
+        // Aquí es donde ejecutas el código para iniciar la app
+        Log.i("App", "Permisos listos, abriendo la cámara...")
+        delayAndStart()
+    }
+
+    // Llama a esta función cuando los permisos son denegados
+    private fun mostrarMensajePermisosDenegados() {
+        // Informa al usuario que la funcionalidad de la cámara no estará disponible.
+        // Puedes usar un Snackbar o un Dialog.
+        // Opcionalmente, puedes usar shouldShowRequestPermissionRationale() para explicar
+        // por qué los permisos son necesarios si el usuario los denegó por primera vez.
+        Log.w("App", "Funcionalidad de cámara deshabilitada por falta de permisos.")
+    }
+
+    private val PERMISSIONS = arrayOf(
+        Manifest.permission.CAMERA
+    )
+
+    // 1. Declarar el ActivityResultLauncher para manejar la respuesta
+    private val requestPermissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+
+            // El mapa 'permissions' contiene la clave (nombre del permiso) y un booleano (true = concedido, false = denegado)
+
+            // Verifica si todos los permisos requeridos fueron concedidos
+            val allGranted = permissions.entries.all { it.value == true }
+
+            if (allGranted) {
+                // ✅ Todos los permisos fueron concedidos.
+                Log.d("Permisos", "Todos los permisos concedidos. Iniciar función de cámara.")
+                iniciarCamara()
+            } else {
+                // ❌ Al menos un permiso fue denegado.
+                Log.e("Permisos", "Al menos un permiso fue denegado.")
+                mostrarMensajePermisosDenegados()
+            }
+        }
+
+    private fun checkAndRequestPermissions(context: Context) {
+
+        // Filtra para obtener solo los permisos que *no* han sido concedidos aún.
+        val permissionsToRequest = PERMISSIONS.filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+        }.toTypedArray()
+
+        if (permissionsToRequest.isEmpty()) {
+            // Los permisos ya están concedidos.
+            iniciarCamara()
+        } else {
+            // Solicita los permisos faltantes.
+            requestPermissionsLauncher.launch(permissionsToRequest)
+            //
         }
     }
 }
